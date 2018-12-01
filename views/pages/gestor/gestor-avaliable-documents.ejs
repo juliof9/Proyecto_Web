@@ -1,0 +1,108 @@
+<div id="gestor-avaliable-documents" v-cloak>
+
+    <nav>
+      <ul>
+        <li @click="selectMyUnity">
+          <a href="#"><div class="caret-right"></div>
+
+            <svg class="svg-class" width="24px" height="24px" viewBox="0 0 24 24" fill="#4285f4" focusable="false"><path d="M0 0h24v24H0z" fill="none"></path><path d="M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z"></path></svg>
+
+            <span class="list-name">Mi Unidad</span>
+          </a>
+        </li>
+      
+        <li @click="selectShare()">
+          <a href="#">
+            <svg class="" width="24px" height="24px" viewBox="0 0 24 24" fill="#4285f4" focusable="false"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>
+            <span class="list-name" >Compartido </span>
+          </a>
+        </li>
+        <li @click="clickAddButton(); virtualPageSlug = true">
+
+          <a href="#">
+
+            <svg class="" width="24px" height="24px" viewBox="0 0 24 24" fill="#4285f4" focusable="false"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path><path d="M0 0h24v24H0z" fill="none"></path><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></svg>  
+            <span class="list-name">Subir Archivo</span>
+
+          </a>
+
+        </li>
+
+        <li >
+
+          <a href="#">
+
+            <svg class="" width="24px" height="24px" viewBox="0 0 24 24" fill="#4285f4" focusable="false"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"></path></svg>
+
+            <span class="list-name">Backups</span>
+
+          </a>
+
+      </ul>
+
+
+    </nav>
+
+    <div class="drive-gestor" id="container-gestor">
+      <div v-for="ele in documents" @click="selectDocument(ele.id)" class="columnas"> 
+        <img v-bind:src='ele.baseurl' alt="I tried">
+        <h3>{{ele.label}}</h3>
+        <input type="submit" value="Delete" @click="deleteDocument(ele.id); confirmedDeleteThingModalOpen = true" class="delete">
+        <input type="submit" @click="reference(ele.dir)" class="donwload" value="descargar">
+        <input type="submit" @click="ShareDocument()" class="share">
+      </div>
+      
+    </div>
+
+    <modal v-if="confirmedDeleteThingModalOpen" v-cloak key="delete" @close="closeDelete(); confirmedDeleteThingModalOpen = false">
+      <input type="submit" placeholder="Eliminar" @click="eliminar()">
+    </modal>
+
+
+    <modal v-if="virtualPageSlug" v-cloak key="new" @close="closeUploadThingModal(); virtualPageSlug = false">
+      <div class="modal-header">
+        <h5 class="modal-title">Upload a new thing</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <ajax-form action="uploadDocuments" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingUploadThingForm" @submitted="submittedUploadThingForm($event)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Add a file:</label>
+            <div class="photo-uploader" :class="!uploadFormData.previewImageSrc ? 'empty' :  ''">
+              <div class="photo-upload-field row d-flex align-items-center" :class="!uploadFormData.previewImageSrc ? 'justify-content-center' :  'justify-content-start'" >
+                <div class="photo-preview col">
+                  <div class="image-wrapper" :class="!uploadFormData.previewImageSrc ? 'd-flex align-items-center justify-content-center' : ''">
+                    <img v-if="uploadFormData.previewImageSrc" alt="A preview of the selected item" :src="uploadFormData.previewImageSrc"/>
+                    <span v-else class="placeholder-icon fa fa-picture-o"></span>
+                  </div>
+                </div>
+                <div class="col d-flex-column justify-content-center">
+                  <span class="file-upload-button btn btn-sm" :class="[formErrors.photo ? 'btn-outline-danger' : !uploadFormData.previewImageSrc ? 'btn-outline-success' : 'btn-outline-secondary mr-3']">
+                    <span class="button-text" v-if="!uploadFormData.previewImageSrc">Select image</span>
+                    <span class="button-text" v-else>Change image</span>
+                    <input type="file" :disabled="syncing" accept="" class="file-input" @change="changeFileInput($event.target.files)"/>
+                  </span>
+                  <p class="image-advice text-muted" v-if="!formErrors.photo"><strong>Tip</strong>: Make sure the item is front and center in the photo, so people know exactly what you're offering to share.</p>
+                  <p class="image-advice text-danger" v-if="formErrors.photo">A photo is required in order to add a new item.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group" v-if="uploadFormData.previewImageSrc">
+            <label>What is it?</label>
+            <input class="form-control" type="text" v-model="uploadFormData.label" placeholder="Waffle Iron">
+          </div>
+          <p class="text-danger" v-if="cloudError === 'tooBig'"><small>That file is too big. Please choose a junkier picture.</small></p>
+          <p class="text-danger" v-else-if="cloudError"><small>An error occured while processing your request. Please check your information and try again, or <a href="/support">contact support</a> if the error persists.</small></p>
+        </div>
+        <div class="modal-footer flex-row-reverse justify-content-start">
+          <ajax-button type="submit" :syncing="syncing" class="btn btn-primary ml-1">Share item</ajax-button>
+          <button data-dismiss="modal" class="btn btn-outline-primary mr-1">Cancel</button>
+        </div>
+      </ajax-form>
+    </modal>
+  
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
