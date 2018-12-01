@@ -67,7 +67,7 @@ module.exports.custom = {
 
   // Whether to require proof of email address ownership any time a new user
   // signs up, or when an existing user attempts to change their email address.
-  verifyEmailAddresses: true,
+  verifyEmailAddresses: false,
 
   /**************************************************************************
   *                                                                         *
