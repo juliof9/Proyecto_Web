@@ -1,2 +1,4 @@
-# Proyecto_Web
-# Proyecto_Web
+Correo de pruebas:
+admin@example.com
+Password:
+abc123
