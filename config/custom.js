@@ -49,7 +49,7 @@ module.exports.custom = {
   * are sent.                                                               *
   *                                                                         *
   * (https://app.mailgun.com/app/domains)                                   *
-  *                                                                         *
+  * *************************************************************************/                                                                        *
   
   //--------------------------------------------------------------------------
   // /\  Configure these to enable support for automated emails.
