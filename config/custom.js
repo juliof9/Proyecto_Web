@@ -49,8 +49,9 @@ module.exports.custom = {
   * are sent.                                                               *
   *                                                                         *
   * (https://app.mailgun.com/app/domains)                                   *
-  * *************************************************************************/                                                                        *
-  
+  *                                                                         *
+  **************************************************************************/
+
   //--------------------------------------------------------------------------
   // /\  Configure these to enable support for automated emails.
   // ||  (Important for password recovery, verification, contact form, etc.)
@@ -65,7 +66,7 @@ module.exports.custom = {
 
   // Whether to require proof of email address ownership any time a new user
   // signs up, or when an existing user attempts to change their email address.
-  verifyEmailAddresses: false,
+  verifyEmailAddresses: true,
 
   /**************************************************************************
   *                                                                         *
